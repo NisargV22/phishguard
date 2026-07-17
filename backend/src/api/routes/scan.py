@@ -58,18 +58,22 @@ def scan_url():
         "scanned_at": datetime.utcnow().isoformat()
     }), 200
 
+from src.analysis.email_analyzer import analyze_email
+
 @scan_bp.route('/email', methods=['POST'])
 def scan_email():
-    # Mocking email analysis for now
+    data = request.json
+    raw_email = data.get('raw_email')
+    
+    if not raw_email:
+        return jsonify({"error": "Raw email content is required"}), 400
+        
+    analysis_result = analyze_email(raw_email)
+    
+    if "error" in analysis_result:
+        return jsonify(analysis_result), 400
+        
     scan_id = str(uuid.uuid4())
-    return jsonify({
-        "from_address": "unknown@example.com",
-        "spf_result": "fail",
-        "dkim_present": False,
-        "urgency_score": 3,
-        "spoofed_links": [],
-        "urls_found": [],
-        "overall_risk": "high",
-        "suspicious_indicators": ["No DKIM", "SPF fail"],
-        "scan_id": scan_id
-    }), 200
+    analysis_result["scan_id"] = scan_id
+    
+    return jsonify(analysis_result), 200
