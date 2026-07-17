@@ -76,4 +76,21 @@ def scan_email():
     scan_id = str(uuid.uuid4())
     analysis_result["scan_id"] = scan_id
     
-    return jsonify(analysis_result), 200
+@scan_bp.route('/history', methods=['GET'])
+def get_history():
+    db = SessionLocal()
+    scans = db.query(Scan).order_by(Scan.scanned_at.desc()).limit(50).all()
+    
+    results = []
+    for s in scans:
+        results.append({
+            "scan_id": s.scan_id,
+            "url": s.url,
+            "scan_type": s.scan_type,
+            "threat_score": s.threat_score,
+            "label": s.label,
+            "risk_level": s.risk_level,
+            "scanned_at": s.scanned_at.isoformat() if s.scanned_at else None
+        })
+    db.close()
+    return jsonify(results), 200
