@@ -40,7 +40,7 @@ const URLScanner = () => {
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? 'Scanning...' : 'Analyze'}
           </button>
