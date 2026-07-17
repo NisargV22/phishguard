@@ -1,33 +1,82 @@
 import React, { useEffect, useState } from 'react';
-import { getHistory } from '../api/phishApi';
+import { getHistory, getStats } from '../api/phishApi';
 import { motion } from 'framer-motion';
-import { Clock, ShieldAlert, ShieldCheck, Mail } from 'lucide-react';
+import { Clock, ShieldAlert, ShieldCheck, Mail, PieChart as PieChartIcon } from 'lucide-react';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 const History = () => {
   const [history, setHistory] = useState([]);
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchHistory = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getHistory();
-        setHistory(data.data || []);
+        const [historyData, statsData] = await Promise.all([
+          getHistory(),
+          getStats()
+        ]);
+        setHistory(historyData.data || []);
+        setStats(statsData);
       } catch (err) {
         console.error(err);
       }
       setLoading(false);
     };
-    fetchHistory();
+    fetchData();
   }, []);
 
-  if (loading) return <div className="text-center text-slate-400 py-10">Loading history...</div>;
+  if (loading) return <div className="text-center text-slate-400 py-10">Loading analytics...</div>;
 
   return (
-    <div className="w-full max-w-5xl mx-auto mt-10">
-      <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
-        <Clock className="text-purple-400" />
+    <div className="w-full max-w-5xl mx-auto mt-10 space-y-8">
+      <h2 className="text-3xl font-bold flex items-center gap-3">
+        <PieChartIcon className="text-purple-400" />
+        Analytics Dashboard
+      </h2>
+
+      {/* Analytics Dashboard Grid */}
+      {stats && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="glass-panel p-6 flex flex-col justify-center items-center text-center">
+            <h3 className="text-slate-400 font-mono text-sm uppercase tracking-wider mb-2">Total Scans</h3>
+            <span className="text-5xl font-black text-white">{stats.total_scans}</span>
+          </div>
+          <div className="glass-panel p-6 flex flex-col justify-center items-center text-center">
+            <h3 className="text-slate-400 font-mono text-sm uppercase tracking-wider mb-2">Detection Rate</h3>
+            <span className="text-5xl font-black text-indigo-400">{(stats.detection_rate * 100).toFixed(1)}%</span>
+          </div>
+          <div className="glass-panel p-6 h-64 flex flex-col items-center">
+            <h3 className="text-slate-400 font-mono text-sm uppercase tracking-wider mb-2">Risk Distribution</h3>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={stats.distribution}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={40}
+                  outerRadius={70}
+                  paddingAngle={5}
+                  dataKey="value"
+                  stroke="none"
+                >
+                  {stats.distribution.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155' }} />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
+
+      <h2 className="text-3xl font-bold flex items-center gap-3 pt-8 border-t border-slate-800">
+        <Clock className="text-blue-400" />
         Scan History
       </h2>
+      
       <div className="grid gap-4">
         {!Array.isArray(history) ? (
           <div className="glass-panel p-8 text-center text-red-400">Failed to load history data.</div>

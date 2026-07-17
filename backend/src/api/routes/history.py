@@ -39,10 +39,25 @@ def get_stats():
     db = SessionLocal()
     total = db.query(Scan).count()
     phishing = db.query(Scan).filter(Scan.label == 'phishing').count()
+    
+    # Simple risk distribution
+    critical = db.query(Scan).filter(Scan.risk_level == 'critical').count()
+    high = db.query(Scan).filter(Scan.risk_level == 'high').count()
+    medium = db.query(Scan).filter(Scan.risk_level == 'medium').count()
+    low = db.query(Scan).filter(Scan.risk_level == 'low').count()
+    
+    # We could do a time series group_by, but SQLite group by date can be tricky.
+    # For a simple dashboard, let's just return the counts.
     db.close()
     
     return jsonify({
         "total_scans": total,
         "phishing_count": phishing,
-        "detection_rate": (phishing / total) if total > 0 else 0
+        "detection_rate": (phishing / total) if total > 0 else 0,
+        "distribution": [
+            {"name": "Critical", "value": critical, "color": "#ef4444"},
+            {"name": "High", "value": high, "color": "#f97316"},
+            {"name": "Medium", "value": medium, "color": "#eab308"},
+            {"name": "Low", "value": low, "color": "#10b981"}
+        ]
     }), 200
