@@ -107,6 +107,34 @@ const URLScanner = () => {
           </motion.div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* VirusTotal Intel */}
+            {result.vt_stats && !result.vt_stats.error && (
+              <motion.div variants={itemVariants} className="glass-panel p-6 lg:col-span-2">
+                 <h4 className="text-xl font-semibold mb-6 flex items-center gap-2 text-red-400 border-b border-slate-700/50 pb-3">
+                   <Activity size={20} />
+                   Global Threat Intel (VirusTotal)
+                 </h4>
+                 <div className="flex gap-8 justify-around text-center">
+                    <div>
+                      <div className="text-3xl font-black text-red-500">{result.vt_stats.malicious || 0}</div>
+                      <div className="text-xs text-slate-400 uppercase tracking-widest mt-1">Malicious</div>
+                    </div>
+                    <div>
+                      <div className="text-3xl font-black text-yellow-400">{result.vt_stats.suspicious || 0}</div>
+                      <div className="text-xs text-slate-400 uppercase tracking-widest mt-1">Suspicious</div>
+                    </div>
+                    <div>
+                      <div className="text-3xl font-black text-emerald-400">{result.vt_stats.harmless || 0}</div>
+                      <div className="text-xs text-slate-400 uppercase tracking-widest mt-1">Harmless</div>
+                    </div>
+                    <div>
+                      <div className="text-3xl font-black text-slate-500">{result.vt_stats.undetected || 0}</div>
+                      <div className="text-xs text-slate-400 uppercase tracking-widest mt-1">Undetected</div>
+                    </div>
+                 </div>
+              </motion.div>
+            )}
+
             {/* Feature Extract Breakdown */}
             <motion.div variants={itemVariants} className="glass-panel p-6">
                <h4 className="text-xl font-semibold mb-6 flex items-center gap-2 text-indigo-300 border-b border-slate-700/50 pb-3">

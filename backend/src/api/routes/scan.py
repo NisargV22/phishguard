@@ -26,6 +26,10 @@ def scan_url():
     # Explain
     explanation = explain_prediction(features, prediction['threat_score'])
     
+    # Check VirusTotal
+    from src.analysis.vt_client import get_vt_report
+    vt_stats = get_vt_report(url)
+    
     scan_id = str(uuid.uuid4())
     
     # Save to DB
@@ -55,7 +59,8 @@ def scan_url():
         "mitre_technique": "T1566.002",
         "recommendation": "Block this URL at the firewall." if prediction['label'] == 'phishing' else "URL appears safe.",
         "scan_id": scan_id,
-        "scanned_at": datetime.utcnow().isoformat()
+        "scanned_at": datetime.utcnow().isoformat(),
+        "vt_stats": vt_stats
     }), 200
 
 from src.analysis.email_analyzer import analyze_email
