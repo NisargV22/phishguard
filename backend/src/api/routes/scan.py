@@ -17,6 +17,8 @@ def scan_url():
     if not url:
         return jsonify({"error": "URL is required"}), 400
         
+    url = url.strip()
+    
     # Extract features
     features = extract_features(url)
     
@@ -29,6 +31,10 @@ def scan_url():
     # Check VirusTotal
     from src.analysis.vt_client import get_vt_report
     vt_stats = get_vt_report(url)
+    
+    # OSINT Forensics
+    from src.analysis.osint_engine import get_osint_data
+    osint_data = get_osint_data(url)
     
     scan_id = str(uuid.uuid4())
     
@@ -60,7 +66,8 @@ def scan_url():
         "recommendation": "Block this URL at the firewall." if prediction['label'] == 'phishing' else "URL appears safe.",
         "scan_id": scan_id,
         "scanned_at": datetime.utcnow().isoformat(),
-        "vt_stats": vt_stats
+        "vt_stats": vt_stats,
+        "osint": osint_data
     }), 200
 
 from src.analysis.email_analyzer import analyze_email
