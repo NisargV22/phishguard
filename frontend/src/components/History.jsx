@@ -48,26 +48,28 @@ const History = () => {
           </div>
           <div className="glass-panel p-6 h-64 flex flex-col items-center">
             <h3 className="text-slate-400 font-mono text-sm uppercase tracking-wider mb-2">Risk Distribution</h3>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={stats.distribution}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={40}
-                  outerRadius={70}
-                  paddingAngle={5}
-                  dataKey="value"
-                  stroke="none"
-                >
-                  {stats.distribution.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155' }} />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="w-full h-full pb-4">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={stats.distribution}
+                    cx="50%"
+                    cy="45%"
+                    innerRadius={45}
+                    outerRadius={65}
+                    paddingAngle={5}
+                    dataKey="value"
+                    stroke="none"
+                  >
+                    {stats.distribution.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '8px' }} itemStyle={{ color: '#e2e8f0' }} />
+                  <Legend layout="horizontal" verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: '20px', fontSize: '12px' }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
       )}
