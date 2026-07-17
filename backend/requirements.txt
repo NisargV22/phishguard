@@ -11,3 +11,4 @@ beautifulsoup4==4.12.3
 tldextract==5.1.2
 SQLAlchemy==2.0.28
 shap==0.45.0
+python-dotenv==1.0.1

@@ -9,16 +9,19 @@ const URLScanner = () => {
   const [url, setUrl] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleScan = async (e) => {
     e.preventDefault();
     setLoading(true);
     setResult(null);
+    setError('');
     try {
       const res = await scanUrl(url);
       setResult(res);
     } catch (err) {
       console.error(err);
+      setError(err.response?.data?.error || 'Failed to scan URL. Please try again.');
     }
     setLoading(false);
   };
@@ -67,6 +70,7 @@ const URLScanner = () => {
             {loading ? 'Analyzing...' : 'Analyze URL'}
           </button>
         </form>
+        {error && <p className="mt-4 text-red-400 font-semibold relative z-10">{error}</p>}
       </div>
 
       {loading && (
