@@ -4,6 +4,11 @@ import re
 
 def analyze_email(raw_email: str) -> dict:
     """Parses a raw email string and extracts security indicators."""
+    
+    # Check if the user pasted actual headers or just body text
+    if not any(header in raw_email for header in ["From:", "Received:", "Return-Path:", "Delivered-To:", "Authentication-Results:"]):
+        return {"error": "Invalid format: No email headers detected. Please make sure you are pasting the raw email source (e.g., 'Show Original' in Gmail), not just the email body text."}
+
     try:
         msg = email.message_from_string(raw_email, policy=policy.default)
     except Exception as e:
