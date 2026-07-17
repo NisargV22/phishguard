@@ -87,8 +87,8 @@ const URLScanner = () => {
           <motion.div variants={itemVariants} className="glass-panel p-8 mb-6 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="flex-1">
                <h3 className="text-3xl font-bold mb-2">
-                 Status: <span className={result.label === 'phishing' ? 'text-red-500' : 'text-emerald-400 capitalize'}>
-                   {result.label.toUpperCase()}
+                 Status: <span className={result.label === 'phishing' ? 'text-red-500' : 'text-emerald-400 font-black'}>
+                   {result.label === 'benign' ? 'SAFE' : result.label.toUpperCase()}
                  </span>
                </h3>
                <p className="text-slate-400 text-lg mb-4">{result.recommendation}</p>

@@ -11,7 +11,7 @@ const History = () => {
     const fetchHistory = async () => {
       try {
         const data = await getHistory();
-        setHistory(data);
+        setHistory(data.data || []);
       } catch (err) {
         console.error(err);
       }
@@ -29,12 +29,14 @@ const History = () => {
         Scan History
       </h2>
       <div className="grid gap-4">
-        {history.length === 0 ? (
+        {!Array.isArray(history) ? (
+          <div className="glass-panel p-8 text-center text-red-400">Failed to load history data.</div>
+        ) : history.length === 0 ? (
           <div className="glass-panel p-8 text-center text-slate-400">No scans found.</div>
         ) : (
           history.map((scan, i) => (
             <motion.div
-              key={scan.scan_id}
+              key={scan.scan_id || i}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.05 }}
@@ -44,19 +46,19 @@ const History = () => {
                 <div className={`p-2 rounded-full ${scan.scan_type === 'email' ? 'bg-indigo-500/20 text-indigo-400' : scan.label === 'phishing' ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
                   {scan.scan_type === 'email' ? <Mail /> : scan.label === 'phishing' ? <ShieldAlert /> : <ShieldCheck />}
                 </div>
-                <div>
-                  <h4 className="font-semibold text-lg text-slate-200 truncate max-w-md" title={scan.url}>{scan.url || 'Email Analysis'}</h4>
-                  <p className="text-sm text-slate-400">{new Date(scan.scanned_at).toLocaleString()}</p>
+                <div className="overflow-hidden">
+                  <h4 className="font-semibold text-lg text-slate-200 truncate max-w-xs md:max-w-md" title={scan.url}>{scan.url || 'Email Analysis'}</h4>
+                  <p className="text-sm text-slate-400">{scan.scanned_at ? new Date(scan.scanned_at).toLocaleString() : 'Unknown Time'}</p>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="text-right flex-shrink-0 ml-4">
                 <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
                   scan.risk_level === 'critical' ? 'bg-red-500/20 text-red-400' :
                   scan.risk_level === 'high' ? 'bg-orange-500/20 text-orange-400' :
                   scan.risk_level === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
                   'bg-emerald-500/20 text-emerald-400'
                 }`}>
-                  {scan.risk_level} Risk
+                  {scan.risk_level || 'Unknown'} Risk
                 </span>
               </div>
             </motion.div>

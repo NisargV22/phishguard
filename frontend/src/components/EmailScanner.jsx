@@ -31,11 +31,15 @@ const EmailScanner = () => {
           Analyze Email Headers
         </h2>
         <form onSubmit={handleScan} className="flex flex-col gap-4">
+          <p className="text-slate-400 text-sm mb-2">
+            To analyze an email, you must paste its <strong>Raw Source / Original Message</strong> (which includes all the hidden routing headers like <code>Authentication-Results:</code>, <code>Received:</code>, etc.). 
+            <br/><em>In Gmail, click the three dots next to reply ➔ "Show original" ➔ "Copy to clipboard".</em>
+          </p>
           <textarea
             value={rawEmail}
             onChange={(e) => setRawEmail(e.target.value)}
-            placeholder="Paste raw email source here (including headers)..."
-            className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-sm font-mono focus:outline-none focus:border-indigo-500 transition-colors h-64 resize-y"
+            placeholder="Paste complete raw email source here (including ALL headers)...&#10;&#10;Example:&#10;Delivered-To: you@gmail.com&#10;Received: by 10.25.1.1 ...&#10;Authentication-Results: mx.google.com; spf=pass ...&#10;From: Support <support@paypal-update.com>"
+            className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-sm font-mono focus:outline-none focus:border-indigo-500 transition-colors h-64 resize-y text-slate-300 placeholder:text-slate-600"
             required
           />
           <button
@@ -45,7 +49,7 @@ const EmailScanner = () => {
           >
             {loading ? 'Analyzing...' : 'Analyze Source'}
           </button>
-          {error && <p className="text-red-400">{error}</p>}
+          {error && <p className="text-red-400 font-semibold mt-2">{error}</p>}
         </form>
       </div>
 
