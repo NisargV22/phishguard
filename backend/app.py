@@ -7,7 +7,7 @@ from src.api.routes.history import history_bp
 from src.api.routes.feedback import feedback_bp
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Register blueprints
 app.register_blueprint(scan_bp, url_prefix='/api/scan')

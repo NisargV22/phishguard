@@ -7,8 +7,16 @@
 
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500/30;
+    margin: 0;
     font-family: var(--font-sans);
+    background-color: #020617; /* slate-950 */
+    background-image: url('/bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-blend-mode: overlay;
+    color: #e2e8f0; /* slate-200 */
+    @apply antialiased selection:bg-indigo-500/30;
   }
 }
 
