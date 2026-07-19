@@ -22,9 +22,9 @@ def health_check():
         "accuracy": 0.97
     }), 200
 
+# Initialize DB globally to support Gunicorn/WSGI deployments
+init_db()
+
 if __name__ == '__main__':
-    # Initialize DB before running
-    init_db()
-    
     port = int(os.environ.get('PORT', 5001))
     app.run(host='0.0.0.0', port=port, debug=True)
